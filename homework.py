@@ -58,7 +58,7 @@ def get_api_answer(timestamp):
         homework_statuses = requests.get(
             ENDPOINT, headers=headers, params=payload
         )
-    except Exception as error:
+    except Exception:
         message = f"URL {ENDPOINT} не доступен"
         logger.error(message)
         raise exceptions.GetAPIAnswerException(message)
