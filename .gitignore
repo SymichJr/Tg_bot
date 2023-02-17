@@ -150,3 +150,6 @@ static/
 posts/static/
 media/
 
+
+# тестирование работы функций
+testfunk.py
