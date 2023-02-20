@@ -14,5 +14,5 @@ class CheckResponseException(Exception):
 
 
 class ParseStatusException(Exception):
-    """Ошибка проверки статуса."""
+    """Ошибка парсинга статуса."""
     pass
