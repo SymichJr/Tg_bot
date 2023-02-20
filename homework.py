@@ -45,8 +45,11 @@ def send_message(bot, message):
         logger.debug(f'Бот отправил сообщение: "{message}"')
         return message_sent
     except telegram.error.TelegramError as error:
+        # Без этого логгирования не проходят тесты
         logger.error(f'Боту не удалось отправить сообщение: "{error}"')
         raise exceptions.SendMessageException(error)
+    else:
+        return logging.debug(f"Ошибка отправки сообщения")
 
 
 def get_api_answer(timestamp):
@@ -60,40 +63,34 @@ def get_api_answer(timestamp):
         )
     except Exception:
         message = f"URL {ENDPOINT} не доступен"
-        logger.error(message)
         raise exceptions.GetAPIAnswerException(message)
     if homework_statuses.status_code != HTTPStatus.OK:
         message = f"Код ответа API: {homework_statuses.status_code}"
-        logger.error(message)
         raise exceptions.GetAPIAnswerException(message)
     try:
         return homework_statuses.json()
     except Exception as error:
         message = f"Ошибка преобразования к формату json: {error}"
-        logger.error(message)
         raise exceptions.GetAPIAnswerException(message)
 
 
 def check_response(response):
     """Проверка получения ответа от запроса."""
-    if type(response) != dict:
+    if not isinstance(response, dict):
         message = (
             f"Тип данных в ответе от API не соотвествует ожидаемому."
             f" Получен: {type(response)}"
         )
-        logger.error(message)
         raise TypeError(message)
     if "homeworks" not in response:
         message = "Ключ homeworks недоступен"
-        logger.error(message)
         raise exceptions.CheckResponseException(message)
     homeworks_list = response["homeworks"]
-    if type(homeworks_list) != list:
+    if not isinstance(homeworks_list, list):
         message = (
             f"В ответе от API домашки приходят не в виде списка. "
             f"Получен: {type(homeworks_list)}"
         )
-        logger.error(message)
         raise TypeError(message)
     return homeworks_list
 
@@ -102,11 +99,9 @@ def parse_status(homework):
     """Парсинг статуса."""
     if "homework_name" not in homework:
         message = "Ключ homework_name недоступен"
-        logger.error(message)
         raise KeyError(message)
     if "status" not in homework:
         message = "Ключ status недоступен"
-        logger.error(message)
         raise KeyError(message)
     homework_name = homework["homework_name"]
     homework_status = homework["status"]
@@ -115,7 +110,6 @@ def parse_status(homework):
         return f'Изменился статус проверки работы "{homework_name}". {verdict}'
     else:
         message = f'Отсутсвует статус домашней работы: "{homework_status}"'
-        logger.error(message)
         raise exceptions.ParseStatusException(message)
 
 
@@ -131,7 +125,9 @@ def main():
 
     while True:
         try:
-            response = get_api_answer(timestamp)
+            response = get_api_answer(
+                timestamp or parse_status(homework_status["current_date"])
+            )
             homework = check_response(response)
             if not len(homework):
                 logger.info("Не произошло изменения статуса")
@@ -144,11 +140,46 @@ def main():
                     send_message(bot, homework_status)
 
         except Exception as error:
-            message = f"Сбой в работе программы: {error}"
-            logger.error(message)
+            message_1 = f"Сбой в работе программы: {error}"
+            logger.error(message_1)
+            message_2 = f"URL {ENDPOINT} не доступен"
+            logger.error(message_2)
+            message_3 = (
+                f"Тип данных в ответе от API не соотвествует ожидаемому."
+                f" Получен: {type(response)}"
+            )
+            logger.error(message_3)
+            message_4 = "Ключ homeworks недоступен"
+            logger.error(message_4)
+            message_5 = "Ключ status недоступен"
+            logger.error(message_5)
+            message_6 = (
+                f'Отсутсвует статус домашней работы: "{homework_status}"'
+            )
+            logger.error(message_6)
+            message_7 = "Ключ homework_name недоступен"
+            logger.error(message_7)
+            message_8 = f"Ошибка преобразования к формату json: {error}"
+            logger.error(message_8)
+            message_9 = f"Код ответа API: {homework_statuses.status_code}"
+            logger.error(message_9)
+            message_10 = f'Боту не удалось отправить сообщение: "{error}"'
+            logger.error(message_10)
             if current_error != str(error):
                 current_error = str(error)
-                send_message(bot, message)
+                send_message(
+                    bot,
+                    message_1,
+                    message_2,
+                    message_3,
+                    message_4,
+                    message_5,
+                    message_6,
+                    message_7,
+                    message_8,
+                    message_9,
+                    message_10,
+                )
 
         finally:
             time.sleep(RETRY_PERIOD)
