@@ -105,8 +105,10 @@ def parse_status(homework):
         raise KeyError(message)
     homework_name = homework["homework_name"]
     homework_status = homework["status"]
+    current_date = homework["current_date"]
     if homework_status in HOMEWORK_VERDICTS:
         verdict = HOMEWORK_VERDICTS[homework_status]
+        current_date = current_date
         return f'Изменился статус проверки работы "{homework_name}". {verdict}'
     else:
         message = f'Отсутсвует статус домашней работы: "{homework_status}"'
@@ -126,7 +128,7 @@ def main():
     while True:
         try:
             response = get_api_answer(
-                timestamp or parse_status(homework_status["current_date"])
+                timestamp
             )
             homework = check_response(response)
             if not len(homework):
@@ -154,7 +156,7 @@ def main():
             message_5 = "Ключ status недоступен"
             logger.error(message_5)
             message_6 = (
-                f'Отсутсвует статус домашней работы'
+                "Отсутсвует статус домашней работы"
             )
             logger.error(message_6)
             message_7 = "Ключ homework_name недоступен"
