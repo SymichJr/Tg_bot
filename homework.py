@@ -49,7 +49,7 @@ def send_message(bot, message):
         logger.error(f'Боту не удалось отправить сообщение: "{error}"')
         raise exceptions.SendMessageException(error)
     else:
-        return logging.debug(f"Ошибка отправки сообщения")
+        message = logging.debug("Ошибка отправки сообщения")
 
 
 def get_api_answer(timestamp):
@@ -161,7 +161,7 @@ def main():
             logger.error(message_7)
             message_8 = f"Ошибка преобразования к формату json: {error}"
             logger.error(message_8)
-            message_9 = f"Код ответа API: {homework_statuses.status_code}"
+            message_9 = f"Ошибка кода ответа от API"
             logger.error(message_9)
             message_10 = f'Боту не удалось отправить сообщение: "{error}"'
             logger.error(message_10)
