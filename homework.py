@@ -105,10 +105,8 @@ def parse_status(homework):
         raise KeyError(message)
     homework_name = homework["homework_name"]
     homework_status = homework["status"]
-    current_date = homework["current_date"]
     if homework_status in HOMEWORK_VERDICTS:
         verdict = HOMEWORK_VERDICTS[homework_status]
-        current_date = current_date
         return f'Изменился статус проверки работы "{homework_name}". {verdict}'
     else:
         message = f'Отсутсвует статус домашней работы: "{homework_status}"'
