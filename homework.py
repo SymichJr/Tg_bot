@@ -154,14 +154,14 @@ def main():
             message_5 = "Ключ status недоступен"
             logger.error(message_5)
             message_6 = (
-                f'Отсутсвует статус домашней работы: "{homework_status}"'
+                f'Отсутсвует статус домашней работы'
             )
             logger.error(message_6)
             message_7 = "Ключ homework_name недоступен"
             logger.error(message_7)
             message_8 = f"Ошибка преобразования к формату json: {error}"
             logger.error(message_8)
-            message_9 = f"Ошибка кода ответа от API"
+            message_9 = "Ошибка кода ответа от API"
             logger.error(message_9)
             message_10 = f'Боту не удалось отправить сообщение: "{error}"'
             logger.error(message_10)
