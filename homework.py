@@ -138,47 +138,16 @@ def main():
                 else:
                     current_status = homework_status
                     send_message(bot, homework_status)
+            timestamp = requests.get('current_date')
 
         except Exception as error:
-            message_1 = f"Сбой в работе программы: {error}"
-            logger.error(message_1)
-            message_2 = f"URL {ENDPOINT} не доступен"
-            logger.error(message_2)
-            message_3 = (
-                f"Тип данных в ответе от API не соотвествует ожидаемому."
-                f" Получен: {type(response)}"
-            )
-            logger.error(message_3)
-            message_4 = "Ключ homeworks недоступен"
-            logger.error(message_4)
-            message_5 = "Ключ status недоступен"
-            logger.error(message_5)
-            message_6 = (
-                "Отсутсвует статус домашней работы"
-            )
-            logger.error(message_6)
-            message_7 = "Ключ homework_name недоступен"
-            logger.error(message_7)
-            message_8 = f"Ошибка преобразования к формату json: {error}"
-            logger.error(message_8)
-            message_9 = "Ошибка кода ответа от API"
-            logger.error(message_9)
-            message_10 = f'Боту не удалось отправить сообщение: "{error}"'
-            logger.error(message_10)
+            message = f"Сбой в работе программы: {error}"
+            logger.error(message)
             if current_error != str(error):
                 current_error = str(error)
                 send_message(
                     bot,
-                    message_1,
-                    message_2,
-                    message_3,
-                    message_4,
-                    message_5,
-                    message_6,
-                    message_7,
-                    message_8,
-                    message_9,
-                    message_10,
+                    message,
                 )
 
         finally:
